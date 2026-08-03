@@ -1,6 +1,12 @@
 namespace TodoListApp.Domain.Contracts;
 
-public record TodoListItem(int sequence, string body);
+/// DTO model for creating or updating an item from the TODO list.
+public record TodoListItem(string body);
+
+/// DTO model for persisting changes to an existing TODO list.
+/// itemsToCreate: New items to add to the TODO list.
+/// itemsToUpdate: Changes to apply to existing items within the TODO list.
+/// itemsToDelete: Existing items within the TODO list to be removed.
 public record TodoListChanges(
   IEnumerable<TodoListItem> itemsToCreate,
   Dictionary<Guid, TodoListItem> itemsToUpdate,
