@@ -1,5 +1,5 @@
 <Solution>
   <Project Path="src/api/TodoListApp.Api/TodoListApp.Api.csproj" />
   <Project Path="src/api/TodoListApp.Domain/TodoListApp.Domain.csproj" />
-  <Project Path="src/api/TodoListApp.Infrastructure/TodoListApp.Infrastructure.csproj" />
+  <Project Path="src/api/TodoListApp.Infrastructure.InMemoryDB/TodoListApp.Infrastructure.InMemoryDB.csproj" />
 </Solution>
