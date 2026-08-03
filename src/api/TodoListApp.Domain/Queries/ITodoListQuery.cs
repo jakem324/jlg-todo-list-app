@@ -2,7 +2,7 @@ namespace TodoListApp.Domain.Queries;
 
 /// Read-model representing a single item in the TODO list.
 /// ID: UUID of the item within the list.
-/// Sequence: Display order for the item, relative to the paginated subsection of selected items.
+/// Sequence: Display order for the item.
 /// Body: The content of the item.
 public record TodoListItem(Guid itemID, int sequence, string body);
 
