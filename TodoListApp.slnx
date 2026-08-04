@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/api/">
+    <Project Path="src/api/TodoListApp.Tests/TodoListApp.Tests.csproj" />
+  </Folder>
   <Project Path="src/api/TodoListApp.Api/TodoListApp.Api.csproj" />
   <Project Path="src/api/TodoListApp.Domain/TodoListApp.Domain.csproj" />
   <Project Path="src/api/TodoListApp.Infrastructure.InMemoryDB/TodoListApp.Infrastructure.InMemoryDB.csproj" />
