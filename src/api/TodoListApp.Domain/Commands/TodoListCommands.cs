@@ -2,6 +2,13 @@ using TodoListApp.Domain.Contracts;
 
 namespace TodoListApp.Domain.Commands;
 
+public enum TodoListCommandResult
+{
+    Ok,
+    ListNotFound,
+    ItemNotFound
+}
+
 public class TodoListCommands
 {
     private readonly ITodoListRepository _todoListRepository;
@@ -17,7 +24,7 @@ public class TodoListCommands
         return uuid;
     }
 
-    public async Task<Guid> InitializeNewItem(Guid listUuid)
+    public async Task<(TodoListCommandResult, Guid)> InitializeNewItem(Guid listUuid)
     {
         var result = await _todoListRepository.CommitListChanges(
           listUuid,
@@ -27,7 +34,56 @@ public class TodoListCommands
                 title: string.Empty,
                 body: string.Empty)
             }));
-        return result.created.FirstOrDefault();
+        if (!result.listUuidValid)
+        {
+            return (TodoListCommandResult.ListNotFound, Guid.Empty);
+        }
+
+        var createdItemId = result.created.First();
+        return (TodoListCommandResult.Ok, createdItemId);
+    }
+
+    public async Task<TodoListCommandResult> UpdateItem(Guid listUuid, Guid itemId, string title, string body)
+    {
+        var result = await _todoListRepository.CommitListChanges(
+          listUuid,
+          new TodoListChanges(
+            itemsToUpdate: new Dictionary<Guid, TodoListItem>
+            {
+                [itemId] = new TodoListItem(
+                  title: title,
+                  body: body)
+            }));
+        if (!result.listUuidValid)
+        {
+            return TodoListCommandResult.ListNotFound;
+        }
+
+        if (!result.updated.Contains(itemId))
+        {
+            return TodoListCommandResult.ItemNotFound;
+        }
+
+        return TodoListCommandResult.Ok;
+    }
+
+    public async Task<TodoListCommandResult> DeleteItem(Guid listUuid, Guid itemId)
+    {
+        var result = await _todoListRepository.CommitListChanges(
+          listUuid,
+          new TodoListChanges(
+            itemsToDelete: new[] { itemId }));
+        if (!result.listUuidValid)
+        {
+            return TodoListCommandResult.ListNotFound;
+        }
+
+        if (!result.deleted.Contains(itemId))
+        {
+            return TodoListCommandResult.ItemNotFound;
+        }
+
+        return TodoListCommandResult.Ok;
     }
 }
 

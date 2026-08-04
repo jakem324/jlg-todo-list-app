@@ -15,15 +15,17 @@ public record TodoListChanges(
 /// Result object representing the changes applied. Indicates the success of each
 /// requested creation, update, and deletion, indicating "not found" errors for any
 /// where applicable.
+/// listUuidValid: indicates that the specified TODO list was found.
 /// created: UUIDs of the newly-created item(s).
 /// updated: UUIDs of existing items found and updated. Exclusion of a requested
 /// item from this list indicates that the given item UUID was not found.
 /// deleted: UUIDs of existing items found and deleted. Exclusion of a requested
 /// item from this list indicates that the given item UUID was not found.
 public record TodoListChangesResult(
-  IEnumerable<Guid> created,
-  IEnumerable<Guid> updated,
-  IEnumerable<Guid> deleted);
+  bool listUuidValid,
+  IEnumerable<Guid>? created = null,
+  IEnumerable<Guid>? updated = null,
+  IEnumerable<Guid>? deleted = null);
 
 public interface ITodoListRepository
 {
