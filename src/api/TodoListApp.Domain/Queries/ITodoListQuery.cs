@@ -4,7 +4,7 @@ namespace TodoListApp.Domain.Queries;
 /// ID: UUID of the item within the list.
 /// Sequence: Display order for the item.
 /// Body: The content of the item.
-public record TodoListItem(Guid itemID, int sequence, string body);
+public record TodoListItem(Guid itemID, int sequence, string title, string body);
 
 public interface ITodoListQuery
 {
