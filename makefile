@@ -1,6 +1,9 @@
 lint-api:
 	dotnet format TodoListApp.slnx
 
+restore-api-packages:
+	dotnet restore TodoListApp.slnx
+
 build-api:
 	dotnet build TodoListApp.slnx
 
