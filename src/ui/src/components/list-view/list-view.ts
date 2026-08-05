@@ -1,14 +1,17 @@
 import { Signal, Component, input, inject, computed } from '@angular/core';
 import { ListQueryService, ListItemsQuery } from '@services/list-query-service';
 import { JsonPipe } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-list-view',
-  imports: [JsonPipe],
+  imports: [JsonPipe, RouterLink],
   templateUrl: './list-view.html',
   styleUrl: './list-view.css',
 })
 export class ListView {
+  protected route = inject(ActivatedRoute);
+
   private listQueryService = inject(ListQueryService);
   listId = input<string>();
   page = input<number>();
