@@ -10,6 +10,7 @@ public class TodoListInMemoryDb : Command.ITodoListRepository, Query.ITodoListQu
     public TodoListInMemoryDb()
     {
         _lists = new Dictionary<Guid, Query.TodoListItem[]>();
+        SeedMockData();
     }
 
     public Task<Guid> InitializeNewList()
@@ -82,5 +83,18 @@ public class TodoListInMemoryDb : Command.ITodoListRepository, Query.ITodoListQu
         return Task.FromResult(new Query.RetrieveListItemsResult(
               _lists[listID].Skip(skip).Take(take).ToArray(),
               _lists[listID].Length))!;
+    }
+
+    private void SeedMockData()
+    {
+        var faker = new Bogus.Faker();
+        var items = Enumerable.Range(0, 200).Select(index => new Query.TodoListItem(
+          itemID: Guid.NewGuid(),
+          title: $"TODO: {faker.Hacker.Verb()} {faker.Hacker.Noun()}",
+          body: $"Need to {faker.Hacker.Verb().ToLower()} the {faker.Hacker.Noun()} in order to {faker.Hacker.Verb().ToLower()}",
+          sequence: index
+        )).ToArray();
+
+        _lists.Add(Guid.Parse("3eb8ec4a-cd90-4923-94c6-8966e06f5e57"), items);
     }
 }
