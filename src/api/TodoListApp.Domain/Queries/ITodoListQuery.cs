@@ -14,4 +14,8 @@ public interface ITodoListQuery
     /// listID: The UUID of the list to search for.
     /// Returns: The items from the specified list, or null if the specified list is not found.
     Task<RetrieveListItemsResult?> RetrieveListItems(Guid listID, int skip, int take);
+
+    /// Retrieves the individual list item specified.
+    /// Returns: The specified item, or null if it is not found.
+    Task<TodoListItem?> RetrieveListItem(Guid listID, Guid itemID);
 }

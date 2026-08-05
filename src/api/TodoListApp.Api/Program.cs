@@ -64,6 +64,15 @@ app.MapGet("/{listId:guid}", async (ITodoListQuery queryHandler, Guid listId, in
     return Results.Ok(result);
 });
 
+app.MapGet("/{listId:guid}/{itemId:guid}", async (ITodoListQuery queryHandler, Guid listId, Guid itemId) =>
+{
+    var result = await queryHandler.RetrieveListItem(listId, itemId);
+    if (result == null)
+        return Results.NotFound();
+
+    return Results.Ok(result);
+});
+
 app.Run();
 
 record UpdateListItemDto(string title, string body);

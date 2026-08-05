@@ -79,10 +79,22 @@ public class TodoListInMemoryDb : Command.ITodoListRepository, Query.ITodoListQu
     public Task<Query.RetrieveListItemsResult?> RetrieveListItems(Guid listID, int skip, int take)
     {
         if (!_lists.ContainsKey(listID))
-            return null!;
+            return Task.FromResult<Query.RetrieveListItemsResult?>(null);
+
         return Task.FromResult(new Query.RetrieveListItemsResult(
               _lists[listID].Skip(skip).Take(take).ToArray(),
               _lists[listID].Length))!;
+    }
+
+    public Task<Query.TodoListItem?> RetrieveListItem(Guid listID, Guid itemID)
+    {
+        if (!_lists.ContainsKey(listID))
+            return Task.FromResult<Query.TodoListItem?>(null);
+
+        var items = _lists[listID];
+        return Task.FromResult(items
+            .Where(item => item.itemID == itemID)
+            .FirstOrDefault());
     }
 
     private void SeedMockData()
