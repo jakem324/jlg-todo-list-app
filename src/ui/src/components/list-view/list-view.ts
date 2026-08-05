@@ -42,4 +42,14 @@ export class ListView {
     if (!listIdValue) return;
     this.router.navigate([`${listIdValue}/edit/${itemId}`]);
   }
+
+  deleteItem(itemId: string) {
+    const listIdValue = this.listId();
+    const pageValue = this.page();
+    if (!listIdValue || !pageValue) return;
+    this.listCommandService.deleteListItem(listIdValue, itemId).subscribe({
+      // TODO: not ideal
+      next: () => window.location.reload(),
+    });
+  }
 }

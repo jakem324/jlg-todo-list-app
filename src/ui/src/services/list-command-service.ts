@@ -17,4 +17,8 @@ export class ListCommandService {
       .post(`${listId}/add`, null, { responseType: 'text' })
       .pipe(map((res) => JSON.parse(res)));
   }
+
+  deleteListItem(listId: string, itemId: string) {
+    return this.http.delete(`${listId}/${itemId}`);
+  }
 }

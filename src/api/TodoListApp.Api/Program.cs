@@ -58,7 +58,7 @@ app.MapPost("/{listId:guid}/{itemId:guid}/update", async (TodoListCommands comma
     return Results.Ok();
 });
 
-app.MapPost("/{listId:guid}/{itemId:guid}/delete", async (TodoListCommands commandHandler, Guid listId, Guid itemId) =>
+app.MapDelete("/{listId:guid}/{itemId:guid}", async (TodoListCommands commandHandler, Guid listId, Guid itemId) =>
 {
     var result = await commandHandler.DeleteItem(listId, itemId);
     if (result == TodoListCommandResult.ListNotFound || result == TodoListCommandResult.ItemNotFound)
