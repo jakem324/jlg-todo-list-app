@@ -1,9 +1,10 @@
 import { Signal, Component, input, inject, computed } from '@angular/core';
 import { ListQueryService, ListItemsQuery } from '@services/list-query-service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-list-view',
-  imports: [],
+  imports: [JsonPipe],
   templateUrl: './list-view.html',
   styleUrl: './list-view.css',
 })
