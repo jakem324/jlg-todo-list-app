@@ -22,7 +22,12 @@
             <div>{{ item.body }}</div>
           </div>
           <div class="flex flex-col">
-            <div><a href="">Edit</a> | <a href="">Delete</a></div>
+            <div>
+              <button type="button" class="link-button" (click)="editItem(item.itemID)">
+                Edit
+              </button>
+              | <a href="">Delete</a>
+            </div>
           </div>
         </div>
       }

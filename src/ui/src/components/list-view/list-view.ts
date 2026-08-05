@@ -36,4 +36,10 @@ export class ListView {
       error: () => this.commandError.set(true),
     });
   }
+
+  editItem(itemId: string) {
+    const listIdValue = this.listId();
+    if (!listIdValue) return;
+    this.router.navigate([`${listIdValue}/edit/${itemId}`]);
+  }
 }
