@@ -9,8 +9,8 @@ interface ListItem {
 }
 
 export interface ListItemsQuery {
-  listId: string;
-  page: number;
+  listId: string | undefined;
+  page: number | undefined;
 }
 
 interface ListItemsQueryResult {
@@ -26,22 +26,25 @@ interface ListItemsQueryApiResponse {
   items: ListItem[];
 }
 
-const pageSize = 50;
+const pageSize = 10;
 
 @Service()
 export class ListQueryService {
 
   getItemsList = (querySignal: Signal<ListItemsQuery>): Signal<ListItemsQueryResult> => {
     const parameters = computed(() => {
-      const page = querySignal().page;
+      const page = querySignal().page ?? 1;
       const skip = (page * pageSize) - pageSize;
       const take = pageSize;
 
       return { skip, take };
     });
-    const apiResponse = httpResource(() => `${querySignal().listId}?skip=${parameters().skip}&take=${parameters().take}`);
+    const apiResponse = httpResource(() => {
+      if (!querySignal().listId || !querySignal().page) return undefined;
+      const url = `${querySignal().listId}?skip=${parameters().skip}&take=${parameters().take}`;
+      return url;
+    });
     const result = computed(() => {
-      const data: ListItemsQueryApiResponse | undefined = apiResponse.value() as unknown as ListItemsQueryApiResponse | undefined;
       const error = apiResponse.error() as HttpErrorResponse | undefined;
       const status = error?.status;
 
@@ -72,6 +75,7 @@ export class ListQueryService {
           items: []
         };
 
+      const data: ListItemsQueryApiResponse | undefined = apiResponse.value() as unknown as ListItemsQueryApiResponse | undefined;
       if (data) {
         const pageCount = Math.ceil(data.totalAvailable / pageSize);
         return {

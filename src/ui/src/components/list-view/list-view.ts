@@ -10,15 +10,12 @@ import { JsonPipe } from '@angular/common';
 })
 export class ListView {
   private listQueryService = inject(ListQueryService);
-  //listId = input.required<string>();
-  //page = input.required<number>();
-   // 3eb8ec4a-cd90-4923-94c6-8966e06f5e57/1
-  listId = '3eb8ec4a-cd90-4923-94c6-8966e06f5e57';
-  page = 1;
+  listId = input<string>();
+  page = input<number>();
 
   private query: Signal<ListItemsQuery> = computed(() => ({
-    listId: this.listId, //(),
-    page: this.page
+    listId: this.listId(),
+    page: this.page()
   }));
 
   queryResult = this.listQueryService.getItemsList(this.query);
