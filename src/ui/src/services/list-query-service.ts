@@ -21,6 +21,18 @@ interface ListItemsQueryResult {
   items: ListItem[];
 }
 
+export interface FetchListItemQuery {
+  listId: string | undefined;
+  itemId: string | undefined;
+}
+
+interface FetchListItemQueryResult {
+  error: boolean;
+  loading: boolean;
+  itemFound: boolean;
+  item: ListItem | undefined;
+}
+
 interface ListItemsQueryApiResponse {
   totalAvailable: number;
   items: ListItem[];
@@ -94,6 +106,60 @@ export class ListQueryService {
         pageCount: 0,
         items: [],
       };
+    });
+
+    return result;
+  };
+
+  getListItem = (querySignal: Signal<FetchListItemQuery>): Signal<FetchListItemQueryResult> => {
+    const apiResponse = httpResource(() => {
+      const listIdValue = querySignal().listId;
+      const itemIdValue = querySignal().itemId;
+      if (!listIdValue || !itemIdValue) return undefined;
+      const url = `${listIdValue}/${itemIdValue}`;
+      return url;
+    });
+
+    const result = computed(() => {
+      const error = apiResponse.error() as HttpErrorResponse | undefined;
+      const status = error?.status;
+
+      if (status && status === 404)
+        return {
+          error: false,
+          loading: false,
+          itemFound: false,
+        } as FetchListItemQueryResult;
+
+      if (status === null)
+        return {
+          error: false,
+          loading: true,
+          itemFound: false,
+        } as FetchListItemQueryResult;
+
+      if (status && status >= 500)
+        return {
+          error: true,
+          loading: false,
+          itemFound: false,
+        } as FetchListItemQueryResult;
+
+      const data: ListItem | undefined = apiResponse.value() as unknown as ListItem | undefined;
+      if (data) {
+        return {
+          error: false,
+          loading: false,
+          itemFound: true,
+          item: data,
+        } as FetchListItemQueryResult;
+      }
+
+      return {
+        error: false,
+        loading: true,
+        itemFound: false,
+      } as FetchListItemQueryResult;
     });
 
     return result;

@@ -1,1 +1,11 @@
-<p>list-item-view works!</p>
+<div class="flex min-h-screen items-center justify-center">
+  @if (queryResult().loading) {
+    <div>Loading...</div>
+  } @else if (queryResult().error) {
+    <div>Server error</div>
+  } @else if (!queryResult().itemFound) {
+    <div>The specified list could not be found</div>
+  } @else {
+    <pre>{{ queryResult() | json }}</pre>
+  }
+</div>

@@ -24,7 +24,6 @@ export class ListView {
   }));
 
   queryResult = this.listQueryService.getItemsList(this.query);
-  preview = computed(() => JSON.stringify(this.queryResult(), null, 2));
 
   commandError = signal(false);
 
