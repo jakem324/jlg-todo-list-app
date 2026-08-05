@@ -2,10 +2,10 @@ import { Service, Signal, computed } from '@angular/core';
 import { httpResource, HttpErrorResponse } from '@angular/common/http';
 
 interface ListItem {
-    itemID: string;
-    sequence: number;
-    title: string;
-    body: string;
+  itemID: string;
+  sequence: number;
+  title: string;
+  body: string;
 }
 
 export interface ListItemsQuery {
@@ -30,11 +30,10 @@ const pageSize = 10;
 
 @Service()
 export class ListQueryService {
-
   getItemsList = (querySignal: Signal<ListItemsQuery>): Signal<ListItemsQueryResult> => {
     const parameters = computed(() => {
       const page = querySignal().page ?? 1;
-      const skip = (page * pageSize) - pageSize;
+      const skip = page * pageSize - pageSize;
       const take = pageSize;
 
       return { skip, take };
@@ -54,7 +53,7 @@ export class ListQueryService {
           loading: false,
           listFound: false,
           pageCount: 0,
-          items: []
+          items: [],
         };
 
       if (status === null)
@@ -63,7 +62,7 @@ export class ListQueryService {
           loading: true,
           listFound: false,
           pageCount: 0,
-          items: []
+          items: [],
         };
 
       if (status && status >= 500)
@@ -72,10 +71,11 @@ export class ListQueryService {
           loading: false,
           listFound: false,
           pageCount: 0,
-          items: []
+          items: [],
         };
 
-      const data: ListItemsQueryApiResponse | undefined = apiResponse.value() as unknown as ListItemsQueryApiResponse | undefined;
+      const data: ListItemsQueryApiResponse | undefined = apiResponse.value() as unknown as
+        ListItemsQueryApiResponse | undefined;
       if (data) {
         const pageCount = Math.ceil(data.totalAvailable / pageSize);
         return {
@@ -83,7 +83,7 @@ export class ListQueryService {
           loading: false,
           listFound: true,
           pageCount,
-          items: data.items
+          items: data.items,
         };
       }
 
@@ -92,12 +92,10 @@ export class ListQueryService {
         loading: true,
         listFound: false,
         pageCount: 0,
-        items: []
+        items: [],
       };
-
     });
 
     return result;
-  }
-
+  };
 }

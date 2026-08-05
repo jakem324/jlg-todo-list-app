@@ -15,7 +15,7 @@ export class ListView {
 
   private query: Signal<ListItemsQuery> = computed(() => ({
     listId: this.listId(),
-    page: this.page()
+    page: this.page(),
   }));
 
   queryResult = this.listQueryService.getItemsList(this.query);

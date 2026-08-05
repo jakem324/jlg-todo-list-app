@@ -4,15 +4,17 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { baseUrlInterceptor } from './base-url-interceptor';
 import { ListView } from '@components/list-view/list-view';
 
-const routes: Routes = [{
-  path: ':listId/:page',
-  component: ListView
-}];
+const routes: Routes = [
+  {
+    path: ':listId/:page',
+    component: ListView,
+  },
+];
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([baseUrlInterceptor]))
-  ]
+    provideHttpClient(withInterceptors([baseUrlInterceptor])),
+  ],
 };
