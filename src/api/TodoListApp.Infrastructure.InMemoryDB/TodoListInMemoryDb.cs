@@ -27,7 +27,7 @@ public class TodoListInMemoryDb : Command.ITodoListRepository, Query.ITodoListQu
             return Task.FromResult(new Command.TodoListChangesResult(listUuidValid: false));
         }
 
-        var seq = _lists[listID].Max(x => x.sequence);
+        var seq = _lists[listID].Any() ? _lists[listID].Max(x => x.sequence) : 0;
         var created = new List<Guid>();
         var itemsToCreate = changes.itemsToCreate ?? Array.Empty<Command.TodoListItem>();
         foreach (var addition in itemsToCreate)
@@ -70,7 +70,7 @@ public class TodoListInMemoryDb : Command.ITodoListRepository, Query.ITodoListQu
         }
 
         return Task.FromResult(new Command.TodoListChangesResult(
-            listUuidValid: false,
+            listUuidValid: true,
             created: created,
             updated: updated,
             deleted: deleted));

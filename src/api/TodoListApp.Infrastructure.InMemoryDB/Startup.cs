@@ -8,7 +8,8 @@ public static class Startup
 {
     public static void RegisterInMemoryDb(this IServiceCollection services)
     {
-        services.AddTransient<ITodoListRepository, TodoListInMemoryDb>();
-        services.AddTransient<ITodoListQuery, TodoListInMemoryDb>();
+        services.AddSingleton<TodoListInMemoryDb>();
+        services.AddSingleton<ITodoListRepository>(sp => sp.GetRequiredService<TodoListInMemoryDb>());
+        services.AddSingleton<ITodoListQuery>(sp => sp.GetRequiredService<TodoListInMemoryDb>());
     }
 }
