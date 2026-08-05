@@ -8,7 +8,7 @@ interface ListItem {
     body: string;
 }
 
-interface ListItemsQuery {
+export interface ListItemsQuery {
   listId: string;
   page: number;
 }
