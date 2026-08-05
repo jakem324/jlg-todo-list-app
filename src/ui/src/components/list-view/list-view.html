@@ -1,12 +1,16 @@
 <div class="flex min-h-screen items-center justify-center">
   @if (queryResult().loading) {
     <div>Loading...</div>
-  } @else if (queryResult().error) {
+  } @else if (queryResult().error || commandError()) {
     <div>Server error</div>
   } @else if (!queryResult().listFound) {
     <div>The specified list could not be found</div>
   } @else if (!queryResult().items.length) {
-    <div>No items added yet</div>
+    <div class="flex flex-col justify-center">
+      No items added yet<br /><button type="button" class="link-button" (click)="initializeItem()">
+        Add new item
+      </button>
+    </div>
   } @else {
     <div class="flex flex-col min-w-3xl max-w-3xl">
       @for (item of queryResult().items; track item.sequence) {

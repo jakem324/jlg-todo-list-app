@@ -7,3 +7,9 @@
     @apply text-blue-600 underline hover:text-blue-800;
   }
 }
+
+@layer components {
+  .link-button {
+    @apply text-blue-600 underline hover:text-blue-800 cursor-pointer;
+  }
+}
