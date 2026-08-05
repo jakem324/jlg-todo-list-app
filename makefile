@@ -30,3 +30,8 @@ stop-api:
 		echo "API is not running."; \
 	fi;
 	@rm -f api.pid;
+
+lint-ui:
+	cd src/ui && \
+	npx ng lint && \
+	npx prettier . --write
