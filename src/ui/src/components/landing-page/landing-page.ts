@@ -1,0 +1,21 @@
+import { Component, inject, signal } from '@angular/core';
+import { ListCommandService } from '@services/list-command-service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-landing-page',
+  imports: [],
+  templateUrl: './landing-page.html',
+})
+export class LandingPage {
+  private router = inject(Router);
+  private listCommandService = inject(ListCommandService);
+  hasError = signal(false);
+
+  ngOnInit() {
+    this.listCommandService.inititalizeList().subscribe({
+      next: (listId) => this.router.navigate([`/${listId}/1`]),
+      error: () => this.hasError.set(true),
+    });
+  }
+}
