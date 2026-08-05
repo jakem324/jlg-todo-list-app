@@ -1,4 +1,6 @@
 import { Service } from '@angular/core';
 
 @Service()
-export class ListQueryService {}
+export class ListQueryService {
+
+}
