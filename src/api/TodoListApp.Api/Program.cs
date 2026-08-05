@@ -1,4 +1,7 @@
 using TodoListApp.Infrastructure.InMemoryDB;
+using TodoListApp.Domain;
+using TodoListApp.Domain.Commands;
+using TodoListApp.Domain.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.RegisterInMemoryDb();
+builder.Services.RegisterDomainServices();
 
 var app = builder.Build();
 
@@ -18,28 +22,49 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapPost("/initialize", async (TodoListCommands commandHandler) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    var uuid = await commandHandler.InitializeNewTodoList();
+    return Results.Ok(uuid);
+});
 
-app.MapGet("/weatherforecast", () =>
+app.MapPost("/{listId:guid}/add", async (TodoListCommands commandHandler, Guid listId) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var (result, createdItemId) = await commandHandler.InitializeNewItem(listId);
+    if (result == TodoListCommandResult.ListNotFound)
+        return Results.NotFound();
+
+    return Results.Ok(createdItemId);
+});
+
+app.MapPost("/{listId:guid}/{itemId:guid}/update", async (TodoListCommands commandHandler, Guid listId, Guid itemId, UpdateListItemDto dto) =>
+{
+    var result = await commandHandler.UpdateItem(listId, itemId, dto.title, dto.body);
+    if (result == TodoListCommandResult.ListNotFound || result == TodoListCommandResult.ItemNotFound)
+        return Results.NotFound();
+
+    return Results.Ok();
+});
+
+app.MapPost("/{listId:guid}/{itemId:guid}/delete", async (TodoListCommands commandHandler, Guid listId, Guid itemId) =>
+{
+    var result = await commandHandler.DeleteItem(listId, itemId);
+    if (result == TodoListCommandResult.ListNotFound || result == TodoListCommandResult.ItemNotFound)
+        return Results.NotFound();
+
+    return Results.Ok();
+});
+
+app.MapGet("/{listId:guid}", async (ITodoListQuery queryHandler, Guid listId, int skip = 0, int take = 50) =>
+{
+    var result = await queryHandler.RetrieveListItems(listId, skip, take);
+    if (result == null)
+        return Results.NotFound();
+
+    return Results.Ok(result);
+});
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+record UpdateListItemDto(string title, string body);
+

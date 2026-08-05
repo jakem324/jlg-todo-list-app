@@ -3,6 +3,7 @@ using Query = TodoListApp.Domain.Queries;
 
 namespace TodoListApp.Infrastructure.InMemoryDB;
 
+/// A crude in-memory DB implementation. Not intended to scale.
 public class TodoListInMemoryDb : Command.ITodoListRepository, Query.ITodoListQuery
 {
     private Dictionary<Guid, Query.TodoListItem[]> _lists;
