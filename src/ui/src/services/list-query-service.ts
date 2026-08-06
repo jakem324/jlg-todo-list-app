@@ -1,5 +1,11 @@
 import { Service, Signal, computed } from '@angular/core';
-import { httpResource, HttpErrorResponse } from '@angular/common/http';
+import { httpResource, HttpResourceRef, HttpErrorResponse } from '@angular/common/http';
+
+interface FetchResult {
+  loading: boolean;
+  notFoundError: boolean;
+  serverError: boolean;
+}
 
 interface ListItem {
   itemID: string;
@@ -13,25 +19,19 @@ export interface ListItemsQuery {
   page: number | undefined;
 }
 
-interface ListItemsQueryResult {
-  error: boolean;
-  loading: boolean;
-  listFound: boolean;
+type ListItemsQueryResult = FetchResult & {
   pageCount: number;
   items: ListItem[];
-}
+};
 
 export interface FetchListItemQuery {
   listId: string | undefined;
   itemId: string | undefined;
 }
 
-interface FetchListItemQueryResult {
-  error: boolean;
-  loading: boolean;
-  itemFound: boolean;
+type FetchListItemQueryResult = FetchResult & {
   item: ListItem | undefined;
-}
+};
 
 interface ListItemsQueryApiResponse {
   totalAvailable: number;
@@ -42,6 +42,34 @@ const pageSize = 10;
 
 @Service()
 export class ListQueryService {
+  private getFetchResult = <T>(resource: HttpResourceRef<T>): FetchResult => {
+    const error = resource.error() as HttpErrorResponse | undefined;
+    const errorStatus = error?.status;
+    const base = {
+      loading: resource.isLoading(),
+    };
+
+    if (error && errorStatus === 404)
+      return {
+        ...base,
+        serverError: false,
+        notFoundError: true,
+      };
+
+    if (error)
+      return {
+        ...base,
+        serverError: true,
+        notFoundError: false,
+      };
+
+    return {
+      ...base,
+      serverError: false,
+      notFoundError: false,
+    };
+  };
+
   getItemsList = (querySignal: Signal<ListItemsQuery>): Signal<ListItemsQueryResult> => {
     const parameters = computed(() => {
       const page = querySignal().page ?? 1;
@@ -55,57 +83,25 @@ export class ListQueryService {
       const url = `${querySignal().listId}?skip=${parameters().skip}&take=${parameters().take}`;
       return url;
     });
-    const result = computed(() => {
-      const error = apiResponse.error() as HttpErrorResponse | undefined;
-      const status = error?.status;
-
-      if (status && status === 404)
-        return {
-          error: false,
-          loading: false,
-          listFound: false,
-          pageCount: 0,
-          items: [],
-        };
-
-      if (status === null)
-        return {
-          error: false,
-          loading: true,
-          listFound: false,
-          pageCount: 0,
-          items: [],
-        };
-
-      if (status && status >= 500)
-        return {
-          error: true,
-          loading: false,
-          listFound: false,
-          pageCount: 0,
-          items: [],
-        };
+    const result: Signal<ListItemsQueryResult> = computed(() => {
+      const baseResult = this.getFetchResult(apiResponse);
 
       const data: ListItemsQueryApiResponse | undefined = apiResponse.value() as unknown as
         ListItemsQueryApiResponse | undefined;
       if (data) {
         const pageCount = Math.ceil(data.totalAvailable / pageSize);
         return {
-          error: false,
-          loading: false,
-          listFound: true,
+          ...baseResult,
           pageCount,
           items: data.items,
         };
       }
 
       return {
-        error: false,
-        loading: true,
-        listFound: false,
+        ...baseResult,
         pageCount: 0,
         items: [],
-      };
+      } as ListItemsQueryResult;
     });
 
     return result;
@@ -121,45 +117,17 @@ export class ListQueryService {
     });
 
     const result = computed(() => {
-      const error = apiResponse.error() as HttpErrorResponse | undefined;
-      const status = error?.status;
-
-      if (status && status === 404)
-        return {
-          error: false,
-          loading: false,
-          itemFound: false,
-        } as FetchListItemQueryResult;
-
-      if (status === null)
-        return {
-          error: false,
-          loading: true,
-          itemFound: false,
-        } as FetchListItemQueryResult;
-
-      if (status && status >= 500)
-        return {
-          error: true,
-          loading: false,
-          itemFound: false,
-        } as FetchListItemQueryResult;
+      const baseResult = this.getFetchResult(apiResponse);
 
       const data: ListItem | undefined = apiResponse.value() as unknown as ListItem | undefined;
       if (data) {
         return {
-          error: false,
-          loading: false,
-          itemFound: true,
+          ...baseResult,
           item: data,
         } as FetchListItemQueryResult;
       }
 
-      return {
-        error: false,
-        loading: true,
-        itemFound: false,
-      } as FetchListItemQueryResult;
+      return baseResult as FetchListItemQueryResult;
     });
 
     return result;
