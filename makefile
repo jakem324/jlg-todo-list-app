@@ -31,10 +31,15 @@ stop-api:
 	fi;
 	@rm -f api.pid;
 
+restore-ui:
+	cd src/ui && \
+	npm i
+
 lint-ui:
 	cd src/ui && \
 	npx ng lint && \
 	npx prettier . --write
 
 serve-ui:
+	$(MAKE) restore-ui
 	cd src/ui && npm run start
