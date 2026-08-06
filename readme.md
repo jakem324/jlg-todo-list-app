@@ -23,7 +23,7 @@ dotnet run --project src/api/TodoListApp.Api/TodoListApp.Api.csproj
 ```
 2) Launch the UI with:
 ```
-cd src/ui && npm run start
+cd src/ui && npm i && npm run start
 ```
 
 ## Debugging
