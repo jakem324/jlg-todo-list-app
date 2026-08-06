@@ -70,7 +70,9 @@ export class ListQueryService {
     };
   };
 
-  getItemsList = (querySignal: Signal<ListItemsQuery>): Signal<ListItemsQueryResult> => {
+  getItemsList = (
+    querySignal: Signal<ListItemsQuery>,
+  ): [Signal<ListItemsQueryResult>, () => void] => {
     const parameters = computed(() => {
       const page = querySignal().page ?? 1;
       const skip = page * pageSize - pageSize;
@@ -83,6 +85,8 @@ export class ListQueryService {
       const url = `${querySignal().listId}?skip=${parameters().skip}&take=${parameters().take}`;
       return url;
     });
+
+    const callback = () => apiResponse.reload();
     const result: Signal<ListItemsQueryResult> = computed(() => {
       const baseResult = this.getFetchResult(apiResponse);
 
@@ -104,7 +108,7 @@ export class ListQueryService {
       } as ListItemsQueryResult;
     });
 
-    return result;
+    return [result, callback];
   };
 
   getListItem = (querySignal: Signal<FetchListItemQuery>): Signal<FetchListItemQueryResult> => {

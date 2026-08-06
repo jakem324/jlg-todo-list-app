@@ -23,7 +23,9 @@ export class ListView {
     page: this.page(),
   }));
 
-  queryResult = this.listQueryService.getItemsList(this.query);
+  private itemsListCall = this.listQueryService.getItemsList(this.query);
+  queryResult = this.itemsListCall[0];
+  reload = this.itemsListCall[1];
 
   commandError = signal(false);
 
@@ -47,11 +49,7 @@ export class ListView {
     const pageValue = this.page();
     if (!listIdValue || !pageValue) return;
     this.listCommandService.deleteListItem(listIdValue, itemId).subscribe({
-      // TODO: not ideal
-      // I would ideally opt to re-trigger the mechanism which fetches the page data. Since the mechanism is a signal, doing so
-      // without changing it to an imperative function call + subscription would instead involve having the service return a 
-      // "reload" callback which invokes the underlying httpResource's reload() method.
-      next: () => window.location.reload(),
+      next: () => this.reload(),
     });
   }
 }

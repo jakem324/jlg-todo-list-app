@@ -10,7 +10,7 @@ describe('ListView', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ListView],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListView);
