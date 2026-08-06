@@ -42,6 +42,7 @@
       @if ({ current: page()! * 1, count: queryResult().pageCount! * 1 }; as page) {
         @let previousPage = page.current - 1;
         @let nextPage = page.current + 1;
+        @let lastPage = page.count - 1;
 
         <div class="flex flex-row">
           @if (page.current > 1) {
@@ -53,12 +54,12 @@
             >&nbsp;&nbsp;&nbsp;
           }
           <span>[ {{ page.current }} ]</span>&nbsp;&nbsp;&nbsp;
-          @if (page.current < page.count - 1) {
+          @if (page.current <= page.count - 1) {
             <a [relativeTo]="route" [routerLink]="['../', nextPage]">{{ nextPage }}</a
             >&nbsp;&nbsp;&nbsp;
             <a [relativeTo]="route" [routerLink]="['../', nextPage]">Next&nbsp;&gt;&gt;</a
             >&nbsp;&nbsp;&nbsp;
-            <a [relativeTo]="route" [routerLink]="['../', nextPage]">Last&nbsp;&gt;&gt;</a
+            <a [relativeTo]="route" [routerLink]="['../', lastPage]">Last&nbsp;&gt;&gt;</a
             >&nbsp;&nbsp;&nbsp;
           }
         </div>
