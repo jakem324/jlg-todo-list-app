@@ -49,7 +49,7 @@ app.MapPost("/{listId:guid}/add", async (TodoListCommands commandHandler, Guid l
     return Results.Ok(createdItemId);
 });
 
-app.MapPost("/{listId:guid}/{itemId:guid}/update", async (TodoListCommands commandHandler, Guid listId, Guid itemId, UpdateListItemDto dto) =>
+app.MapPut("/{listId:guid}/{itemId:guid}", async (TodoListCommands commandHandler, Guid listId, Guid itemId, UpdateListItemDto dto) =>
 {
     var result = await commandHandler.UpdateItem(listId, itemId, dto.title, dto.body);
     if (result == TodoListCommandResult.ListNotFound || result == TodoListCommandResult.ItemNotFound)

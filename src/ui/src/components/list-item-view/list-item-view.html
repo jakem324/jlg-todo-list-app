@@ -6,6 +6,30 @@
   } @else if (!queryResult().itemFound) {
     <div>The specified list could not be found</div>
   } @else {
-    <pre>{{ queryResult() | json }}</pre>
+    <div class="flex flex-col min-w-3xl max-w-3xl">
+      <form [formRoot]="listItemForm">
+        <div>
+          <input
+            class="w-full border border-gray-300"
+            [formField]="listItemForm.title"
+            placeholder="Title"
+          />
+        </div>
+        <br />
+        <div>
+          <textarea
+            rows="5"
+            class="w-full border border-gray-300"
+            [formField]="listItemForm.body"
+            placeholder="Description"
+          ></textarea>
+        </div>
+        <br />
+        <div class="flex flex-row justify-between">
+          <button (click)="cancel()" class="link-button">Cancel</button>
+          <button type="submit" class="link-button">Save</button>
+        </div>
+      </form>
+    </div>
   }
 </div>

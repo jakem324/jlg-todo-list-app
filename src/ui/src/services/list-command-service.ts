@@ -21,4 +21,8 @@ export class ListCommandService {
   deleteListItem(listId: string, itemId: string) {
     return this.http.delete(`${listId}/${itemId}`);
   }
+
+  updateListItem(listId: string, itemId: string, title: string, body: string) {
+    return this.http.put(`${listId}/${itemId}`, { title, body });
+  }
 }
