@@ -48,6 +48,9 @@ export class ListView {
     if (!listIdValue || !pageValue) return;
     this.listCommandService.deleteListItem(listIdValue, itemId).subscribe({
       // TODO: not ideal
+      // I would ideally opt to re-trigger the mechanism which fetches the page data. Since the mechanism is a signal, doing so
+      // without changing it to an imperative function call + subscription would instead involve having the service return a 
+      // "reload" callback which invokes the underlying httpResource's reload() method.
       next: () => window.location.reload(),
     });
   }
