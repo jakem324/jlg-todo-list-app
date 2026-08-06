@@ -42,7 +42,7 @@
       @if ({ current: page()! * 1, count: queryResult().pageCount! * 1 }; as page) {
         @let previousPage = page.current - 1;
         @let nextPage = page.current + 1;
-        @let lastPage = page.count - 1;
+        @let lastPage = page.count;
 
         <div class="flex flex-row">
           @if (page.current > 1) {
