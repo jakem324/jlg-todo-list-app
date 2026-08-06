@@ -14,7 +14,7 @@ export class LandingPage {
 
   ngOnInit() {
     this.listCommandService.inititalizeList().subscribe({
-      next: (listId) => this.router.navigate([`/${listId}/1`]),
+      next: (listId) => this.router.navigate([`/${listId}`]),
       error: () => this.hasError.set(true),
     });
   }
