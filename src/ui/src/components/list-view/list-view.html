@@ -13,6 +13,11 @@
     </div>
   } @else {
     <div class="flex flex-col min-w-3xl max-w-3xl">
+      <div class="flex justify-end">
+        <button type="button" class="link-button mb-4" (click)="initializeItem()">
+          Add new item
+        </button>
+      </div>
       @for (item of queryResult().items; track item.sequence) {
         <div class="flex flex-row justify-between border border-gray-100">
           <div class="flex flex-col">
