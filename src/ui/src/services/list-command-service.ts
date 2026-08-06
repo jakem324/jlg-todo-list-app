@@ -6,13 +6,13 @@ import { map, Observable } from 'rxjs';
 export class ListCommandService {
   private http = inject(HttpClient);
 
-  inititalizeList(): Observable<string> {
+  initializeList(): Observable<string> {
     return this.http
       .post('initialize', null, { responseType: 'text' })
       .pipe(map((res) => JSON.parse(res)));
   }
 
-  inititalizeListItem(listId: string): Observable<string> {
+  initializeListItem(listId: string): Observable<string> {
     return this.http
       .post(`${listId}/add`, null, { responseType: 'text' })
       .pipe(map((res) => JSON.parse(res)));

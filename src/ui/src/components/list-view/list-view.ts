@@ -32,7 +32,7 @@ export class ListView {
   initializeItem() {
     const listIdValue = this.listId();
     if (!listIdValue) return;
-    this.listCommandService.inititalizeListItem(listIdValue).subscribe({
+    this.listCommandService.initializeListItem(listIdValue).subscribe({
       next: (itemId) => this.router.navigate([`${listIdValue}/edit/${itemId}`]),
       error: () => this.commandError.set(true),
     });

@@ -13,7 +13,7 @@ export class LandingPage {
   hasError = signal(false);
 
   ngOnInit() {
-    this.listCommandService.inititalizeList().subscribe({
+    this.listCommandService.initializeList().subscribe({
       next: (listId) => this.router.navigate([`/${listId}`]),
       error: () => this.hasError.set(true),
     });
