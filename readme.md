@@ -49,3 +49,6 @@ To lint the UI, `make lint-ui`, or
 cd src/ui && npx ng lint && npx prettier . --write
 ```
 
+## A note on the architecture
+
+This solution utilizes Domain-Driven Design with BDD-style tests on the backend. I realize that in many cases, both would be overkill for a simple CRUD app in production. For the purpose of this exercise, I have used this architecture solely to demonstrate my ability in architecting large systems, which will give us some additional talking points. I look forward to discussing and extending this work together in an interactive session.

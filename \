@@ -1,0 +1,57 @@
+import { inject, Service, httpResource, Signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+interface ListItem {
+    itemId: string;
+    title: string;
+    body: string;
+}
+
+interface ListItemsQuery {
+  listId: string;
+  page: number;
+}
+
+interface ListItemsQueryResult {
+  error: boolean;
+  loading: boolean;
+  listFound: boolean;
+  pageCount: number;
+  items: ListItem[];
+}
+
+@Service()
+export class ListQueryService {
+
+  getItemsList = (querySignal: Signal<ListItemsQuery>): Signal<ListItemsQueryResult> => {
+    const apiResponse = httpResource(() => `${querySignal().listId}`);
+    const result = computed(() => {
+      const status = apiResponse.status();
+      if (status === null)
+        return {
+          loading: true,
+          listFound: false,
+          pageCount: 0,
+          items: []
+        };
+
+      if (status === 404)
+        return {
+          loading: false,
+          listFound: false,
+          pageCount: 0,
+          items: []
+        };
+
+      const responseData = apiResponse.value();
+    });
+
+  }
+
+
+  private http = inject(HttpClient);
+
+  retrieveListItems = ():
+
+  retrieveListItems(listId: string, page: number = 1) {}
+}
