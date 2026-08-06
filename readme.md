@@ -36,7 +36,7 @@ To view a TODO list filled with mock items, visit:
 http://localhost:4200/3eb8ec4a-cd90-4923-94c6-8966e06f5e57
 
 ## Testing
-To test the API, run `make test-api`. The UI may be tested using the standard Angular CLI commands, although test coverage has not been prioritized on the UI.
+To test the API, run `make test-api`. The UI may be tested using the standard Angular CLI commands, however, owing to time constraints, test coverage has not been prioritized on the UI.
 
 ## Linting
 To run linting on the API, use `make lint-api`, or
