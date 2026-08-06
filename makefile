@@ -35,3 +35,6 @@ lint-ui:
 	cd src/ui && \
 	npx ng lint && \
 	npx prettier . --write
+
+serve-ui:
+	cd src/ui && npm run start
