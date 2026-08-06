@@ -50,6 +50,7 @@ export class ListView {
     if (!listIdValue || !pageValue) return;
     this.listCommandService.deleteListItem(listIdValue, itemId).subscribe({
       next: () => this.reload(),
+      error: () => this.commandError.set(true),
     });
   }
 }
