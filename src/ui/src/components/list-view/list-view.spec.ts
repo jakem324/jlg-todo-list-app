@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { ListView } from './list-view';
 
@@ -9,6 +10,7 @@ describe('ListView', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ListView],
+      providers: [provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListView);
